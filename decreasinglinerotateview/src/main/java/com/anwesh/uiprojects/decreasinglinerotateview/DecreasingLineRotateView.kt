@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.decreasinglinerotateview
  * Created by anweshmishra on 13/07/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.content.Context
@@ -176,6 +177,15 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
             drl.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object{
+
+        fun create(activity : Activity) : DecreasingLineRotateView  {
+            val view : DecreasingLineRotateView = DecreasingLineRotateView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
