@@ -149,4 +149,26 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
             curr.draw(canvas, paint)
         }
     }
+
+    data class Renderer(var view : DecreasingLineRotateView) {
+
+        private val drl : DecreasingRotateLine = DecreasingRotateLine(0)
+
+        private val animator : DLRAnimator = DLRAnimator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            drl.draw(canvas, paint)
+            animator.animate {
+                drl.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            drl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
