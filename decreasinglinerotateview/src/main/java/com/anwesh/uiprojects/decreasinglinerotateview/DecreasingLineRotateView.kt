@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.Canvas
+import android.graphics.Color
 
 val NODES : Int = 5
 
@@ -122,6 +123,30 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
             }
             cb()
             return this
+        }
+    }
+
+    data class DecreasingRotateLine(var i : Int) {
+        private var curr : DLRNode = DLRNode(0)
+
+        private var dir : Int = 1
+
+        fun update(stopcb : (Float) -> Unit) {
+            curr.update {
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                stopcb(it)
+            }
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            curr.startUpdating(startcb)
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            paint.color = Color.parseColor("#303F9F")
+            curr.draw(canvas, paint)
         }
     }
 }
