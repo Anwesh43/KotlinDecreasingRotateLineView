@@ -71,4 +71,57 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class DLRNode(var i : Int, val state : DLRState = DLRState()) {
+
+        private var next : DLRNode? = null
+
+        private var prev : DLRNode? = null
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            paint.strokeWidth = Math.min(w, h) / 60
+            val gap : Float = w / NODES
+            val index : Int = (i + 1) % 2
+            val xIndex : Int = (i + 1) / 2
+            val factor : Int = (1 - 2 * (i % 2))
+            canvas.save()
+            canvas.translate(xIndex * gap + index * gap, h - gap * xIndex - gap /10)
+            canvas.rotate(90f * factor * state.scale)
+            canvas.drawLine(0f, 0f, -gap * index, gap * (i % 2), paint)
+            canvas.restore()
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < NODES - 1) {
+                next = DLRNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : DLRNode {
+            var curr : DLRNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+    }
 }
