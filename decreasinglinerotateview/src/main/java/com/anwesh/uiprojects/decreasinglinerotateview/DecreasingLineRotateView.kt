@@ -99,15 +99,17 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
             val w : Float = canvas.width.toFloat()
             val h : Float = canvas.height.toFloat()
             paint.strokeWidth = Math.min(w, h) / 60
+            paint.strokeCap = Paint.Cap.ROUND
             val gap : Float = w / NODES
             val index : Int = (i + 1) % 2
             val xIndex : Int = (i + 1) / 2
             val factor : Int = (1 - 2 * (i % 2))
             canvas.save()
-            canvas.translate(xIndex * gap + index * gap, h - gap * xIndex - gap /10)
+            canvas.translate(w / 4 + xIndex * gap + index * gap, 0.8f * h - gap * xIndex - gap /10)
             canvas.rotate(90f * factor * state.scale)
             canvas.drawLine(0f, 0f, -gap * index, gap * (i % 2), paint)
             canvas.restore()
+            next?.draw(canvas, paint)
         }
 
         init {
@@ -165,6 +167,7 @@ class DecreasingLineRotateView(ctx : Context) : View(ctx) {
         private val animator : DLRAnimator = DLRAnimator(view)
 
         fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
             drl.draw(canvas, paint)
             animator.animate {
                 drl.update {
